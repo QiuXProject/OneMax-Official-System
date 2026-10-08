@@ -1,0 +1,9 @@
+PRETTY_NAME="OneMax 0.1 (oparty na Debian 12)"
+NAME="OneMax"
+VERSION="0.1"
+VERSION_ID="0.1"
+VERSION_CODENAME=bookworm
+ID=onemax
+ID_LIKE=debian
+HOME_URL="https://github.com/QiuXProject/OneMax-Official-System"
+BUG_REPORT_URL="https://github.com/QiuXProject/OneMax-Official-System/issues"

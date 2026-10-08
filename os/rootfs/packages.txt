@@ -1,0 +1,27 @@
+# Pakiety instalowane przez debootstrap (ROOTFS_SOURCE=debootstrap).
+# Jedna nazwa na linie; komentarze zaczynaja sie od #.
+# Baza: Debian 12 (bookworm). Zmiana listy = zmiana zawartosci systemu.
+systemd-sysv
+systemd-resolved
+dbus
+apt
+ca-certificates
+sudo
+openssh-server
+iproute2
+iputils-ping
+netbase
+tzdata
+kmod
+procps
+util-linux
+e2fsprogs
+less
+nano
+curl
+wget
+git
+python3
+make
+gcc
+libc6-dev

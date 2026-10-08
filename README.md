@@ -1,6 +1,13 @@
 # OneMax-Official-System
 
-System operacyjny OneMax oparty na Linuksie. Pierwszym elementem jest logo bootowania.
+System operacyjny OneMax oparty na Linuksie.
+
+## System OneMax 0.1 (ISO i obraz BIOS do maszyny wirtualnej)
+
+- `os/`: opis systemu: jądro Linux 6.1.158 z logo OneMax, Debian 12 (bookworm), initramfs, menu Limine.
+- `scripts/build-os.sh`: buduje cały system (`scripts/build-os.sh all`). Wyniki trafiają do `~/onemax-release/`:
+  `onemax-0.1.iso` (BIOS i UEFI) oraz `onemax-0.1-bios.img` (dysk BIOS).
+- Instrukcja uruchomienia w VirtualBox i lista kontrolna testu: [os/README.md](os/README.md).
 
 ## Logo bootowania
 
