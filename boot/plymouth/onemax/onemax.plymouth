@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=OneMax
+Description=OneMax boot logo with progress bar and LUKS passphrase prompt
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/onemax
+ScriptFile=/usr/share/plymouth/themes/onemax/onemax.script
