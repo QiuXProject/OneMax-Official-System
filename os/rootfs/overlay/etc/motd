@@ -1,0 +1,8 @@
+
+Witaj w OneMax 0.1 (oparty na Debian 12 bookworm).
+
+  - Pakiety: sudo apt update && sudo apt install <pakiet>
+  - Konto domyslne: onemax. Zmien haslo poleceniem: passwd
+  - Klucze SSH sa tworzone przy pierwszym uruchomieniu; sshd jest domyslnie wylaczony
+    (wlacz: sudo systemctl enable --now ssh)
+

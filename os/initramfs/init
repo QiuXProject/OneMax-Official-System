@@ -1,0 +1,119 @@
+#!/bin/busybox sh
+# OneMax initramfs (x86_64). Montuje system glowny i przekazuje sterowanie do systemd.
+#
+# Dwa uklady systemu:
+#   live - plyta ISO z plikiem /live/rootfs.squashfs: squashfs (tylko odczyt) + overlay w RAM
+#   disk - zainstalowany system: partycja ext4 zawierajaca /usr/lib/systemd/systemd
+#
+# Domyslnie szukamy najpierw plyty live, potem partycji ext4.
+#
+# Parametry jadra:
+#   onemax.mode=auto|live|disk  wymuszenie ukladu (domyslnie auto)
+#   onemax.shell                powloka przed przelaczeniem (diagnostyka)
+
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+/bin/busybox --install -s /bin
+
+log() {
+    echo "onemax-init: $*"
+}
+
+emergency() {
+    log "BLAD: $*"
+    log "uruchamiam powloke awaryjna (Ctrl+Alt+Del restartuje maszyne)"
+    exec sh
+}
+
+mount -t proc proc /proc 2>/dev/null
+mount -t sysfs sysfs /sys 2>/dev/null
+mount -t devtmpfs devtmpfs /dev 2>/dev/null
+mkdir -p /run /tmp /newroot /medium /lower /rw
+
+MODE=auto
+SHELL_FIRST=0
+for arg in $(cat /proc/cmdline); do
+    case "$arg" in
+        onemax.mode=*) MODE=${arg#onemax.mode=} ;;
+        onemax.shell) SHELL_FIRST=1 ;;
+    esac
+done
+
+LIVE_DEV=""
+ROOT_DEV=""
+
+# Plyta live: ISO9660 z plikiem /live/rootfs.squashfs. Zwraca 0 po pelnym zamontowaniu.
+try_live() {
+    for dev in /dev/sr[0-9]* /dev/sd[a-z] /dev/vd[a-z] /dev/hd[a-z] /dev/xvd[a-z] /dev/nvme[0-9]n[0-9]; do
+        [ -b "$dev" ] || continue
+        mount -t iso9660 -o ro "$dev" /medium 2>/dev/null || continue
+        if [ -f /medium/live/rootfs.squashfs ]; then
+            if losetup -r /dev/loop0 /medium/live/rootfs.squashfs \
+                && mount -t squashfs -o ro /dev/loop0 /lower \
+                && mount -t tmpfs -o mode=0755 tmpfs /rw \
+                && mkdir -p /rw/upper /rw/work \
+                && mount -t overlay overlay -o lowerdir=/lower,upperdir=/rw/upper,workdir=/rw/work /newroot; then
+                LIVE_DEV=$dev
+                return 0
+            fi
+            log "nie udalo sie zamontowac squashfs z $dev"
+            umount /lower 2>/dev/null
+            umount /rw 2>/dev/null
+        fi
+        umount /medium 2>/dev/null
+    done
+    return 1
+}
+
+# Partycja systemu: ext4 z /usr/lib/systemd/systemd. Zwraca 0 po zamontowaniu w /newroot.
+try_disk() {
+    for dev in /dev/sd[a-z][0-9]* /dev/vd[a-z][0-9]* /dev/hd[a-z][0-9]* /dev/xvd[a-z][0-9]* /dev/nvme[0-9]n[0-9]p[0-9]*; do
+        [ -b "$dev" ] || continue
+        mount -t ext4 -o rw "$dev" /newroot 2>/dev/null || continue
+        if [ -e /newroot/usr/lib/systemd/systemd ]; then
+            ROOT_DEV=$dev
+            return 0
+        fi
+        umount /newroot 2>/dev/null
+    done
+    return 1
+}
+
+tries=0
+while :; do
+    case "$MODE" in
+        auto|live) try_live && break ;;
+    esac
+    case "$MODE" in
+        auto|disk) try_disk && break ;;
+    esac
+    tries=$((tries + 1))
+    if [ "$tries" -ge 30 ]; then
+        emergency "nie znaleziono systemu (tryb: $MODE). Sprawdz kolejnosc rozruchu i dyski."
+    fi
+    sleep 1
+done
+
+if [ -n "$LIVE_DEV" ]; then
+    log "uklad live na $LIVE_DEV"
+    mkdir -p /newroot/medium
+    mount --move /medium /newroot/medium 2>/dev/null
+else
+    log "uklad zainstalowany na $ROOT_DEV"
+fi
+
+mkdir -p /newroot/proc /newroot/sys /newroot/dev /newroot/run
+mount --move /proc /newroot/proc || emergency "nie przeniesiono /proc"
+mount --move /sys /newroot/sys || emergency "nie przeniesiono /sys"
+mount --move /dev /newroot/dev || emergency "nie przeniesiono /dev"
+mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /newroot/run
+
+if [ "$SHELL_FIRST" = 1 ]; then
+    log "onemax.shell: powloka przed switch_root (exit = kontynuuj start)"
+    sh
+fi
+
+log "przelaczanie na systemd"
+# shellcheck disable=SC2093  # po nieudanym switch_root wykonuje sie emergency
+exec switch_root /newroot /sbin/init
+emergency "switch_root nie powiodl sie"
