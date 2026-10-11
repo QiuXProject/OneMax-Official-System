@@ -47,6 +47,21 @@ export class FakeAudioContext {
       stop() { self.stoppedOscillators += 1; },
     });
   }
+  createAnalyser() {
+    const data = new Uint8Array(512);
+    return {
+      fftSize: 1024,
+      smoothingTimeConstant: 0,
+      frequencyBinCount: 512,
+      getByteFrequencyData(target) {
+        target.set(data.subarray(0, target.length));
+      },
+      getByteTimeDomainData(target) {
+        target.set(data.subarray(0, target.length));
+      },
+    };
+  }
+
   createBufferSource() {
     return audioNode({ buffer: null, onended: null, start() {}, stop() {}, playbackRate: audioParam(1) });
   }

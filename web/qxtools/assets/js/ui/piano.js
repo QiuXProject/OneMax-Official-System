@@ -430,6 +430,9 @@ export function createPiano(options) {
     if (!w || !h) return;
     ctx.clearRect(0, 0, w, h);
 
+    // klawisze są wcięte w korpus pianina — nuty muszą jechać z tym samym przesunięciem
+    const keysOffset = keysWrap.offsetLeft || 0;
+
     // linie oktaw
     ctx.strokeStyle = 'rgba(255,255,255,0.055)';
     ctx.lineWidth = 1;
@@ -437,8 +440,8 @@ export function createPiano(options) {
       const geo = geometry.get(midi);
       if (!geo) continue;
       ctx.beginPath();
-      ctx.moveTo(geo.left + 0.5, 0);
-      ctx.lineTo(geo.left + 0.5, h);
+      ctx.moveTo(keysOffset + geo.left + 0.5, 0);
+      ctx.lineTo(keysOffset + geo.left + 0.5, h);
       ctx.stroke();
     }
 
@@ -473,7 +476,7 @@ export function createPiano(options) {
       ctx.fillStyle = color;
       ctx.shadowBlur = 12;
       ctx.shadowColor = color;
-      roundRectPath(ctx, geo.left + 1, y, Math.max(3, geo.width - 2), height, 4);
+      roundRectPath(ctx, keysOffset + geo.left + 1, y, Math.max(3, geo.width - 2), height, 4);
       ctx.fill();
       ctx.shadowBlur = 0;
     }

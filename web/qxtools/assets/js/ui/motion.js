@@ -1,7 +1,8 @@
 /**
- * QXTools — wspólne zachowania interfejsu: tło, kursor-reflektor,
+ * QXTools — wspólne zachowania interfejsu: tło, pole gwiazd, kursor-reflektor,
  * animacje wejścia, liczniki, pochylenie kart i nawigacja.
  */
+import { startStarfield } from './starfield.js';
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -150,6 +151,23 @@ export function mountMarquee() {
   }
 }
 
+/** Pasek postępu przewijania na samej górze strony. */
+export function mountScrollProgress() {
+  if (document.querySelector('.qx-scroll-progress')) return;
+  const bar = document.createElement('div');
+  bar.className = 'qx-scroll-progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    bar.style.width = `${(ratio * 100).toFixed(2)}%`;
+  };
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+}
+
 /** Formatowanie rozmiaru pliku. */
 export function formatBytes(bytes) {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -173,6 +191,8 @@ export function formatTime(seconds) {
 /** Jedno miejsce inicjalizacji dla każdej strony. */
 export function initChrome() {
   mountBackground();
+  mountScrollProgress();
+  startStarfield();
   mountNav();
   mountReveal();
   mountCounters();

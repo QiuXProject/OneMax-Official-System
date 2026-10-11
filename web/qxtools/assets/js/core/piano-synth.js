@@ -62,6 +62,12 @@ export function createPianoSynth(context) {
   master.connect(reverbTone).connect(convolver).connect(wet).connect(compressor);
   compressor.connect(context.destination);
 
+  // odczep dla wizualizacji (nie wpływa na tor audio)
+  const analyser = context.createAnalyser();
+  analyser.fftSize = 1024;
+  analyser.smoothingTimeConstant = 0.78;
+  compressor.connect(analyser);
+
   const voices = new Map();
   let sustain = false;
   const sustained = new Set();
@@ -220,6 +226,9 @@ export function createPianoSynth(context) {
     },
     get sustain() {
       return sustain;
+    },
+    getAnalyser() {
+      return analyser;
     },
     resume() {
       if (context.state === 'suspended') return context.resume();

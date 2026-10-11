@@ -8,6 +8,7 @@ import { createWaveform } from './waveform.js';
 import { createPianoRoll } from './piano-roll.js';
 import { createPiano } from './piano.js';
 import { createPianoSynth } from '../core/piano-synth.js';
+import { startSpectrum } from './spectrum.js';
 import { arrange, DIFFICULTIES } from '../core/arrange.js';
 import { notesToText, writeMidi } from '../core/midi.js';
 import { midiToName } from '../core/dsp.js';
@@ -84,6 +85,8 @@ const el = {
   scoreStreak: $('score-streak'),
   scoreNotes: $('score-notes'),
   toast: $('toast'),
+  railMode: $('rail-mode'),
+  spectrum: $('spectrum'),
 };
 
 /* ---------------------------------------------------------------- toast */
@@ -104,6 +107,7 @@ const roll = createPianoRoll(el.roll);
 const synth = createPianoSynth(getAudioContext());
 synth.setVolume(0.85);
 synth.setReverb(0.42);
+startSpectrum(el.spectrum, synth.getAnalyser());
 
 const piano = createPiano({ root: el.piano, fallCanvas: el.fall, synth });
 piano.onScore = (score) => {
@@ -456,6 +460,8 @@ for (const button of el.mode.querySelectorAll('button')) {
     state.mode = button.dataset.mode;
     piano.setMode(state.mode);
     el.chipMode.textContent = state.mode === 'auto' ? 'AUTO' : 'RĘCZNIE';
+    el.railMode.textContent = state.mode === 'auto' ? 'AUTO' : 'RĘCZNIE';
+    el.railMode.dataset.mode = state.mode;
     el.pianoStatus.textContent =
       state.mode === 'auto' ? 'pianino zagra utwór samo' : 'grasz ty — pianino czeka na właściwe klawisze';
     el.playLabel.textContent = 'Graj';
@@ -560,3 +566,5 @@ window.addEventListener('keydown', (event) => {
 setProgress(0, 'Czekam na plik…', null);
 el.keyboardRoot.textContent = midiToName(piano.state.keyboardRoot);
 el.chipMode.textContent = 'AUTO';
+el.railMode.textContent = 'AUTO';
+el.railMode.dataset.mode = 'auto';

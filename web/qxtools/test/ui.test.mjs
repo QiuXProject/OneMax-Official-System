@@ -40,6 +40,9 @@ test('Interfejs MP3 -> MIDI: plik -> konwersja -> nuty -> pianino -> pobranie .m
   const blackKey = document.querySelector('.qx-key--black');
   assert.ok(blackKey.style.left, 'czarne klawisze muszą mieć policzoną pozycję');
   assert.ok(document.querySelector('.qx-bg'), 'tło strony zamontowane');
+  assert.ok(document.querySelector('.qx-scroll-progress'), 'pasek postępu przewijania');
+  assert.ok(document.getElementById('spectrum'), 'canvas analizatora widma');
+  assert.equal(document.getElementById('rail-mode').textContent, 'AUTO', 'listwa pianina pokazuje tryb');
 
   // --- wgranie pliku ---
   const file = new window.File([new Uint8Array(4096)], 'melodia-testowa.mp3', { type: 'audio/mpeg' });
@@ -104,6 +107,7 @@ test('Interfejs MP3 -> MIDI: plik -> konwersja -> nuty -> pianino -> pobranie .m
   // --- przełączanie trybu gry ---
   document.querySelector('[data-mode="manual"]').click();
   assert.equal(document.getElementById('chip-mode').textContent, 'RĘCZNIE');
+  assert.equal(document.getElementById('rail-mode').textContent, 'RĘCZNIE', 'listwa pianina zmienia tryb');
   assert.match(document.getElementById('piano-status').textContent, /grasz/i);
   document.querySelector('[data-mode="auto"]').click();
   assert.equal(document.getElementById('chip-mode').textContent, 'AUTO');

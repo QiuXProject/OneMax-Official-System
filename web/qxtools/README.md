@@ -69,8 +69,10 @@ web/qxtools/
       converter.worker.js        worker uruchamiający potok
       yield.js                   oddawanie wątku (pasek postępu)
     js/ui/                       warstwa przeglądarkowa
-      motion.js                  tło, kursor, animacje wejścia, liczniki
+      motion.js                  tło, kursor, pasek przewijania, animacje wejścia, liczniki
       canvas.js                  pomocniki canvas (roundRect z zapasową ścieżką)
+      starfield.js               pole gwiazd w tle z parallaksą od kursora
+      spectrum.js                pasek analizatora widma (AnalyserNode)
       audio-file.js              kontekst audio, dekodowanie plików, obwiednia fali
       waveform.js                fala dźwiękowa z głowicą
       piano-roll.js              piano roll z wynikiem
@@ -102,7 +104,8 @@ web/qxtools/
 
 ## Pianino
 
-- 88 klawiszy (A0–C8), syntezator addytywny z pogłosem splotowym generowanym proceduralnie.
+- 88 klawiszy (A0–C8) w korpusie z listwą i odbiciem światła, syntezator addytywny
+  z pogłosem splotowym generowanym proceduralnie, pasek analizatora widma pod klawiaturą.
 - **Poziomy trudności** — `Łatwy` (jedna linia melodii, siatka ćwierćnut, zakres C4–C6, bez
   współbrzmień), `Średni` (melodia + bas, siatka ósemek, do 3 dźwięków), `Profesjonalny`
   (pełna transkrypcja, do 8 dźwięków).
@@ -112,6 +115,16 @@ web/qxtools/
   `Q 2 W 3 E R 5 T 6 Y 7 U`, `←`/`→` zmiana oktawy, `spacja` pedał). Pianino czeka na właściwy
   klawisz i liczy celność, pudła i serię.
 - Tempo, transpozycja, głośność, pętla, podpowiedzi klawiszy i nazwy nut.
+
+## Wygląd
+
+Ciemny motyw: aurora i siatka w tle, pole gwiazd z parallaksą, kursor-reflektor, szkło
+z conic-borderem, pasek postępu przewijania, animowane liczniki i karty z tiltem 3D.
+Wszystkie animacje wyłączają się przy `prefers-reduced-motion`.
+
+Strona nie była renderowana w prawdziwej przeglądarce w środowisku, w którym powstała
+(brak Chromium i bibliotek `libnss3`/`libpango`, mirrory Debiana niedostępne). Układ i logikę
+pokrywają testy w jsdom; wygląd trzeba potwierdzić wzrokowo w przeglądarce.
 
 ## Ograniczenia
 
