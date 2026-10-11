@@ -9,17 +9,28 @@ System operacyjny OneMax oparty na Linuksie.
   `onemax-0.1.iso` (BIOS i UEFI) oraz `onemax-0.1-bios.img` (dysk BIOS).
 - Instrukcja uruchomienia w VirtualBox i lista kontrolna testu: [os/README.md](os/README.md).
 
-## SandGlitch: gra WebXR / VR
+## SandGlitch: gra VR na Meta Quest (Unity)
 
-W katalogu `game/` znajduje się grywalny prototyp **SandGlitch** — prawdziwa scena WebXR uruchamiana w przeglądarce, z menu intro, logo i wejściem do immersyjnego VR przez `VRButton`. Gra nie ma trybu PC: rozgrywka startuje wyłącznie po wejściu do sesji headsetu.
+Docelowa wersja **SandGlitch** to prawdziwa gra VR na **Meta Quest** zbudowana w
+**Unity** (`game-unity/`). Jest w pełni VR-only — nie ma żadnego trybu PC, myszy ani
+klawiatury. Zawiera intro/logo, menu startowe w przestrzeni VR (start wyłącznie przez
+wycelowanie kontrolerem i trigger), fizykę z chwytaniem i rzucaniem, niszczalne
+obiekty, manekiny z ragdollem, stylizowaną krew oraz fale przeciwników.
+
+- Kod rozgrywki i konfiguracja projektu: [game-unity/](game-unity/)
+- Przewodnik budowy APK na Questa krok po kroku: [game-unity/SETUP_GUIDE.md](game-unity/SETUP_GUIDE.md)
+
+W katalogu `game/` pozostawiono wcześniejszy prototyp WebXR (przeglądarkowy) — to nie
+jest docelowy produkt dla Questa, tylko materiał pomocniczy.
 
 ```bash
+# tylko prototyp WebXR (opcjonalnie)
 cd game
 npm install
 npm run dev
 ```
 
-Gra ma własną pętlę fizyki (grawitacja, impulsy, tarcie, odbicia, kolizje obiektów), rzucane i rozwalane skrzynie, beczki oraz ścianę z odłamkami. Glitch-dummy mają ragdoll z osobnymi kończynami; trafienia uruchamiają stylizowane czerwone cząsteczki i plamy, bez zewnętrznych assetów. Sterowanie desktopowe i VR oraz wymagania opisano w [game/README.md](game/README.md).
+Gra ma własną pętlę fizyki (grawitacja, impulsy, tarcie, odbicia, kolizje obiektów), rzucane i rozwalane skrzynie, beczki oraz ścianę z odłamkami. Glitch-dummy mają ragdoll z osobnymi kończynami; trafienia uruchamiają stylizowane czerwone cząsteczki i plamy, bez zewnętrznych assetów.
 
 ## Logo bootowania
 
