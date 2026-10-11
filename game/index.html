@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#090b0e" />
+    <title>SANDGLITCH // VR PHYSICS SANDBOX</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game-canvas" aria-label="SandGlitch 3D VR sandbox"></canvas>
+
+      <div id="ui-layer">
+        <section id="intro-screen" class="screen">
+          <div class="grain"></div>
+          <div class="scanline"></div>
+          <div class="intro-topline">
+            <span class="signal-dot"></span>
+            <span>ONEMAX LABS / EXPERIMENT 07</span>
+            <span class="topline-right">IMMERSIVE VR ONLY</span>
+          </div>
+
+          <div class="brand-lockup" aria-label="SandGlitch">
+            <div class="brand-emblem" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i>
+              <b></b>
+            </div>
+            <div class="wordmark">SAND<span>GLITCH</span></div>
+            <div class="brand-subtitle">PHYSICS // CHAOS // SURVIVE</div>
+          </div>
+
+          <div class="menu-card">
+            <div class="menu-kicker"><span>SIMULATION ACCESS</span><span>v0.1.0</span></div>
+            <h1>ENTER THE <em>BREAK ZONE</em></h1>
+            <p class="menu-copy">A room-scale physics sandbox where every crate, dummy and wall has a breaking point.</p>
+            <div class="menu-actions">
+              <div id="vr-button-slot" aria-label="Enter immersive VR"></div>
+            </div>
+            <div class="vr-only-note"><span class="signal-dot"></span> HEADSET REQUIRED &nbsp;·&nbsp; NO DESKTOP MODE</div>
+            <button id="how-to" class="text-button"><span>?</span> VR CONTROLS</button>
+          </div>
+
+          <div class="intro-bottomline">
+            <div><strong>VR ONLY</strong> TRIGGER GRAB / PUNCH &nbsp;·&nbsp; THUMBSTICK MOVE &nbsp;·&nbsp; RELEASE TO THROW</div>
+            <div><strong>WEBXR</strong> ROOM-SCALE PHYSICS SANDBOX</div>
+          </div>
+
+          <div id="help-panel" class="help-panel is-hidden">
+            <button id="close-help" class="close-button" aria-label="Close instructions">×</button>
+            <div class="menu-kicker"><span>FIELD MANUAL</span><span>01 / 03</span></div>
+            <h2>BREAK<br /><em>EVERYTHING.</em></h2>
+            <ul>
+              <li><span>01</span><b>FIND A TARGET</b><small>Look at a crate, barrel or glitch dummy.</small></li>
+              <li><span>02</span><b>HIT OR GRAB</b><small>Aim a controller ray. Use the trigger to grab a prop or punch a target.</small></li>
+              <li><span>03</span><b>MAKE IT FLY</b><small>Release the trigger with momentum. Impacts create real debris and ragdolls.</small></li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="hud" class="is-hidden" aria-live="polite">
+          <div class="hud-top">
+            <div class="hud-chip"><span class="chip-label">SECTOR</span><strong>07 / SAND PIT</strong></div>
+            <div class="hud-chip hud-wave"><span class="chip-label">WAVE</span><strong id="wave-value">01</strong></div>
+            <div class="hud-chip hud-score"><span class="chip-label">SCORE</span><strong id="score-value">000000</strong></div>
+          </div>
+          <div class="hud-bottom">
+            <div class="vital-block">
+              <div class="vital-header"><span>SUIT INTEGRITY</span><strong id="health-value">100</strong></div>
+              <div class="meter"><i id="health-meter"></i></div>
+            </div>
+            <div id="event-feed" class="event-feed"><span class="feed-line">SYSTEM // sandbox online</span></div>
+            <div class="hint-block"><span>TRIGGER</span> GRAB / PUNCH &nbsp;·&nbsp; RELEASE TO THROW</div>
+          </div>
+        </section>
+
+        <div id="reticle" class="is-hidden"><span></span></div>
+        <div id="vr-status" class="is-hidden">IMMERSIVE SESSION ACTIVE</div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

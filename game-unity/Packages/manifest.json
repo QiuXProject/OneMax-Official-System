@@ -1,0 +1,23 @@
+{
+  "scopedRegistries": [
+    {
+      "name": "Meta XR",
+      "url": "https://registry.npmjs.org",
+      "scopes": [
+        "com.meta",
+        "com.meta.xr"
+      ]
+    }
+  ],
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0",
+    "com.unity.xr.management": "4.4.0",
+    "com.unity.openxr": "1.8.2",
+    "com.unity.xr.interaction.toolkit": "2.5.2",
+    "com.meta.openxr": "60.0.0",
+    "com.meta.xr.sdk.core": "60.0.0",
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.ugui": "1.0.0",
+    "com.unity.render-pipelines.universal": "14.0.8"
+  }
+}
