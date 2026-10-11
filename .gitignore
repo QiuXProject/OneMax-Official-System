@@ -1,5 +1,7 @@
 __pycache__/
 *.pyc
+node_modules/
+dist/
 
 # Obrazy systemu i pliki wynikowe budowania (nie trafiaja do Git)
 *.iso
