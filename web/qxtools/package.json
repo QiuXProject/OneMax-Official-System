@@ -1,0 +1,18 @@
+{
+  "name": "qxtools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QXTools — narzędzia audio w przeglądarce (MP3 → MIDI, wirtualne pianino).",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "tune": "node test/sweep.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^30.1.2",
+    "lamejs": "^1.2.1",
+    "mpg123-decoder": "^1.0.3"
+  }
+}

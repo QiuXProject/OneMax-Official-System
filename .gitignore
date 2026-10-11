@@ -7,3 +7,6 @@ __pycache__/
 *.vdi
 *.squashfs
 *.cpio.gz
+
+# Zależności testów QXTools (nie trafiają do Git)
+node_modules/

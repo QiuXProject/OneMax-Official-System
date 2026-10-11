@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MP3 → MIDI · QXTools</title>
+    <meta
+      name="description"
+      content="Konwerter MP3 na MIDI w przeglądarce: transkrypcja nut, tempo, tonacja, pobieranie .mid i test na wirtualnym pianinie z trybami Łatwy, Średni i Profesjonalny."
+    />
+    <meta name="theme-color" content="#05060d" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c5cff'/%3E%3Cpath d='M7 20V12M12 23V9M17 19v-7M22 24V8M27 18v-5' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/tool.css" />
+  </head>
+  <body>
+    <header class="qx-nav">
+      <div class="qx-shell qx-nav__inner">
+        <a class="qx-logo" href="../index.html" aria-label="QXTools — strona główna">
+          <span class="qx-logo__mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 15V9M8 19V5M13 16v-8M18 20V4" stroke="url(#lg2)" stroke-width="2.4" stroke-linecap="round" />
+              <defs>
+                <linearGradient id="lg2" x1="0" y1="0" x2="24" y2="24">
+                  <stop stop-color="#a78bfa" /><stop offset="0.5" stop-color="#22d3ee" /><stop offset="1" stop-color="#ff4d8d" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          QXTools
+        </a>
+        <nav class="qx-nav__links" aria-label="Główna">
+          <a class="qx-nav__link" href="../index.html#narzedzia">Narzędzia</a>
+          <a class="qx-nav__link" href="#pianino">Pianino</a>
+          <a class="qx-nav__link qx-btn qx-btn--ghost qx-btn--sm" href="../index.html">← Strona główna</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="qx-page-head">
+        <div class="qx-shell">
+          <span class="qx-eyebrow reveal">Narzędzie 01 · konwerter</span>
+          <h1 class="reveal" style="--reveal-delay: 70ms">
+            MP3 <span class="qx-grad-text">→</span> MIDI
+          </h1>
+          <p class="reveal" style="--reveal-delay: 140ms">
+            Wgraj nagranie, a QXTools rozpozna nuty, tempo i tonację, wygeneruje plik <code>.mid</code>
+            i odda Ci go na wirtualnym pianinie. Wszystko liczy się na Twoim urządzeniu — plik nie jest
+            nigdzie wysyłany.
+          </p>
+          <div class="qx-page-head__chips reveal" style="--reveal-delay: 210ms">
+            <span class="qx-chip qx-chip--live">bez uploadu</span>
+            <span class="qx-chip">web worker</span>
+            <span class="qx-chip">SMF format 1 · 480 TPQ</span>
+            <span class="qx-chip">88 klawiszy</span>
+            <span class="qx-chip">auto &amp; ręcznie</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="qx-shell">
+        <div class="qx-workspace">
+          <!-- ====================== PLIK ====================== -->
+          <div class="qx-card reveal">
+            <div class="qx-panel__head"><strong>01</strong> · plik źródłowy</div>
+
+            <div class="qx-drop" id="drop" tabindex="0" role="button" aria-label="Wybierz plik audio">
+              <input type="file" id="file-input" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" class="qx-sr" />
+              <div class="qx-drop__icon" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 16V4m0 0 4 4m-4-4L8 8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M4 16v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="qx-drop__title">Upuść plik albo kliknij</div>
+              <div class="qx-drop__hint">Najlepiej do ~10 minut materiału. Plik zostaje na Twoim komputerze.</div>
+              <div class="qx-drop__formats">
+                <span class="qx-chip">MP3</span>
+                <span class="qx-chip">WAV</span>
+                <span class="qx-chip">OGG</span>
+                <span class="qx-chip">FLAC</span>
+                <span class="qx-chip">M4A</span>
+              </div>
+            </div>
+
+            <div id="file-card" class="qx-hidden">
+              <div class="qx-file">
+                <div class="qx-file__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18V6l10-2v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="6.5" cy="18" r="2.6" stroke="currentColor" stroke-width="1.8" />
+                    <circle cx="16.5" cy="16" r="2.6" stroke="currentColor" stroke-width="1.8" />
+                  </svg>
+                </div>
+                <div style="min-width: 0">
+                  <div class="qx-file__name" id="file-name">—</div>
+                  <div class="qx-file__meta" id="file-meta">—</div>
+                </div>
+                <button class="qx-icon-btn" id="file-clear" style="margin-left: auto" title="Usuń plik" aria-label="Usuń plik">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="qx-wave-wrap">
+                <canvas class="qx-wave" id="wave" aria-label="Fala dźwiękowa"></canvas>
+                <div class="qx-wave-tools">
+                  <button class="qx-icon-btn" id="preview-toggle" title="Odsłuchaj oryginał" aria-label="Odsłuchaj oryginał">
+                    <svg id="preview-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M7 4.5v15l13-7.5-13-7.5Z" />
+                    </svg>
+                  </button>
+                  <span id="preview-time">0:00 / 0:00</span>
+                  <button class="qx-btn qx-btn--sm qx-btn--ghost" id="file-change" style="margin-left: auto">Zmień plik</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="qx-progress">
+              <div class="qx-progress__row">
+                <span id="progress-label">Czekam na plik…</span>
+                <span id="progress-percent">0%</span>
+              </div>
+              <div class="qx-meter"><div class="qx-meter__fill" id="progress-fill"></div></div>
+              <div class="qx-stages" id="stages">
+                <span class="qx-stage" data-stage="decode">dekodowanie</span>
+                <span class="qx-stage" data-stage="resample">resampling</span>
+                <span class="qx-stage" data-stage="analyse">widmo</span>
+                <span class="qx-stage" data-stage="pitch">wysokości</span>
+                <span class="qx-stage" data-stage="done">wynik</span>
+              </div>
+              <div style="margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap">
+                <button class="qx-btn qx-btn--primary" id="convert-btn" disabled>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 4h7l9 8-9 8H4l9-8-9-8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                  </svg>
+                  Konwertuj na MIDI
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ====================== WYNIKI ====================== -->
+          <div class="qx-card reveal" style="--reveal-delay: 120ms">
+            <div class="qx-panel__head"><strong>02</strong> · wynik transkrypcji</div>
+
+            <div class="qx-empty" id="result-empty">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6" />
+                <path d="M7 10h2v4H7zM11 8h2v8h-2zM15 11h2v2h-2z" fill="currentColor" />
+              </svg>
+              <span>Wgraj plik i uruchom konwersję — tutaj pojawią się nuty, tempo i tonacja.</span>
+            </div>
+
+            <div id="result" class="qx-hidden">
+              <div class="qx-stats">
+                <div class="qx-stats__cell">
+                  <div class="qx-stats__value qx-stats__value--accent" id="stat-notes">0</div>
+                  <div class="qx-stats__label">nut</div>
+                </div>
+                <div class="qx-stats__cell">
+                  <div class="qx-stats__value" id="stat-bpm">—</div>
+                  <div class="qx-stats__label">tempo BPM</div>
+                </div>
+                <div class="qx-stats__cell">
+                  <div class="qx-stats__value" id="stat-key">—</div>
+                  <div class="qx-stats__label">tonacja</div>
+                </div>
+                <div class="qx-stats__cell">
+                  <div class="qx-stats__value" id="stat-density">—</div>
+                  <div class="qx-stats__label">nut / sek.</div>
+                </div>
+                <div class="qx-stats__cell">
+                  <div class="qx-stats__value" id="stat-range">—</div>
+                  <div class="qx-stats__label">skala</div>
+                </div>
+              </div>
+
+              <div class="qx-roll-wrap">
+                <canvas class="qx-roll" id="roll" aria-label="Piano roll z wykrytymi nutami"></canvas>
+                <div class="qx-roll-legend">
+                  <span>piano roll · cały utwór</span>
+                  <span id="roll-hint">kliknij nutę w pianinie, aby ją usłyszeć</span>
+                </div>
+              </div>
+
+              <div class="qx-actions">
+                <button class="qx-btn qx-btn--primary" id="download-midi">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  Pobierz MIDI
+                </button>
+                <button class="qx-btn qx-btn--ghost" id="download-txt">Lista nut (.txt)</button>
+                <button class="qx-btn qx-btn--ghost" id="copy-summary">Kopiuj podsumowanie</button>
+              </div>
+
+              <div class="qx-notes" id="notes-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== PIANINO ====================== -->
+      <section class="qx-shell qx-piano-section" id="pianino">
+        <div class="qx-card qx-piano-card reveal">
+          <div class="qx-panel__head">
+            <strong>03</strong> · wirtualne pianino
+            <span id="piano-status">czeka na utwór</span>
+          </div>
+
+          <div class="qx-controls">
+            <div class="qx-control">
+              <span class="qx-control__label">Poziom trudności</span>
+              <div class="qx-segmented" id="difficulty" role="group" aria-label="Poziom trudności">
+                <button type="button" data-difficulty="easy" style="--seg-color: #3ddc97">
+                  Łatwy<small>1 linia</small>
+                </button>
+                <button type="button" data-difficulty="medium" class="is-on" style="--seg-color: #ffb020">
+                  Średni<small>melodia + bas</small>
+                </button>
+                <button type="button" data-difficulty="pro" style="--seg-color: #ff4d8d">
+                  Profesjonalny<small>pełny zapis</small>
+                </button>
+              </div>
+            </div>
+
+            <div class="qx-control">
+              <span class="qx-control__label">Tryb gry</span>
+              <div class="qx-segmented" id="mode" role="group" aria-label="Tryb gry">
+                <button type="button" data-mode="auto" class="is-on" style="--seg-color: #7c5cff">
+                  Auto<small>pianino gra</small>
+                </button>
+                <button type="button" data-mode="manual" style="--seg-color: #22d3ee">
+                  Ręcznie<small>grasz ty</small>
+                </button>
+              </div>
+            </div>
+
+            <div class="qx-control">
+              <span class="qx-control__label">Tempo</span>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <input class="qx-range" type="range" id="speed" min="40" max="160" value="100" step="5" aria-label="Tempo odtwarzania" />
+                <span class="qx-range-value" id="speed-value">100%</span>
+              </div>
+            </div>
+
+            <div class="qx-control">
+              <span class="qx-control__label">Transpozycja</span>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <button class="qx-icon-btn" id="transpose-down" aria-label="Transpozycja w dół">−</button>
+                <span class="qx-range-value" id="transpose-value">0</span>
+                <button class="qx-icon-btn" id="transpose-up" aria-label="Transpozycja w górę">+</button>
+              </div>
+            </div>
+
+            <div class="qx-control">
+              <span class="qx-control__label">Głośność</span>
+              <input class="qx-range" type="range" id="volume" min="0" max="100" value="85" aria-label="Głośność" />
+            </div>
+
+            <div class="qx-control">
+              <span class="qx-control__label">Opcje</span>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <label class="qx-switch">
+                  <input type="checkbox" id="hints" checked />
+                  <span class="qx-switch__track"></span>
+                  Podpowiedzi klawiszy
+                </label>
+                <label class="qx-switch">
+                  <input type="checkbox" id="labels" checked />
+                  <span class="qx-switch__track"></span>
+                  Nazwy nut
+                </label>
+                <label class="qx-switch">
+                  <input type="checkbox" id="loop" />
+                  <span class="qx-switch__track"></span>
+                  Pętla
+                </label>
+              </div>
+            </div>
+
+            <div class="qx-control" style="margin-left: auto">
+              <span class="qx-control__label">Sterowanie</span>
+              <button class="qx-btn qx-btn--primary" id="play" disabled>
+                <svg id="play-icon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M7 4.5v15l13-7.5-13-7.5Z" />
+                </svg>
+                <span id="play-label">Graj</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="qx-piano-scroll" id="piano-scroll">
+            <div class="qx-fall-wrap">
+              <canvas class="qx-fall" id="fall" aria-hidden="true"></canvas>
+              <span class="qx-fall__badge" id="fall-badge">piano roll · live</span>
+              <div class="qx-fall__score">
+                <span class="qx-chip" id="chip-progress">0%</span>
+                <span class="qx-chip qx-chip--live" id="chip-mode">AUTO</span>
+              </div>
+            </div>
+
+            <div class="qx-piano show-labels" id="piano">
+              <div class="qx-piano__keys"></div>
+            </div>
+          </div>
+
+          <div class="qx-piano-foot">
+            <span>Klawiatura komputera:</span>
+            <span class="qx-hint-row">
+              <span class="qx-kbd">Z</span><span class="qx-kbd">S</span><span class="qx-kbd">X</span>
+              <span class="qx-kbd">D</span><span class="qx-kbd">C</span><span class="qx-kbd">V</span>
+              <span class="qx-kbd">G</span><span class="qx-kbd">B</span><span class="qx-kbd">H</span>
+              <span class="qx-kbd">N</span><span class="qx-kbd">J</span><span class="qx-kbd">M</span>
+              <span style="opacity: 0.6">+ górny rząd Q…U</span>
+              <span class="qx-kbd">←</span><span class="qx-kbd">→</span>
+              <span style="opacity: 0.6">oktawa</span>
+              <span class="qx-kbd">spacja</span>
+              <span style="opacity: 0.6">pedał</span>
+            </span>
+            <span id="keyboard-root" style="margin-left: auto">C4</span>
+          </div>
+
+          <div class="qx-score-grid" id="score-panel">
+            <div class="qx-score-grid__cell">
+              <div class="qx-score-grid__value" id="score-accuracy">—</div>
+              <div class="qx-score-grid__label">celność</div>
+            </div>
+            <div class="qx-score-grid__cell">
+              <div class="qx-score-grid__value" id="score-hits">0</div>
+              <div class="qx-score-grid__label">trafione</div>
+            </div>
+            <div class="qx-score-grid__cell">
+              <div class="qx-score-grid__value" id="score-misses">0</div>
+              <div class="qx-score-grid__label">pudła</div>
+            </div>
+            <div class="qx-score-grid__cell">
+              <div class="qx-score-grid__value" id="score-streak">0</div>
+              <div class="qx-score-grid__label">seria</div>
+            </div>
+            <div class="qx-score-grid__cell">
+              <div class="qx-score-grid__value" id="score-notes">0</div>
+              <div class="qx-score-grid__label">nut w trybie</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="qx-note reveal" style="margin-top: 24px">
+          <strong>Wskazówka:</strong> zacznij od trybu <em>Łatwy</em> i Auto — pianino pokaże układ ręki,
+          potem przełącz na <em>Ręcznie</em> z podpowiedziami. Tryb ręczny czeka na właściwy klawisz,
+          więc możesz ćwiczyć we własnym tempie.
+        </p>
+      </section>
+    </main>
+
+    <footer class="qx-footer">
+      <div class="qx-shell qx-footer__inner">
+        <span>QXTools · MP3 → MIDI · przetwarzanie lokalne</span>
+        <a class="qx-nav__link" href="../index.html">Powrót do zestawu narzędzi</a>
+      </div>
+    </footer>
+
+    <div class="qx-toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="../assets/js/ui/mp3-to-midi.js"></script>
+  </body>
+</html>
